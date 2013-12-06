@@ -1,0 +1,15 @@
+---
+layout: post
+title: Command Line Fun
+category: posts
+---
+
+# Fork Bomb!
+The revolution will be a podcast.
+
+{% highlight sh %}
+:(){ :|:& };:
+{% endhighlight %}
+<p></p>
+![The results](/images/forkbomb.gif)
+

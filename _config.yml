@@ -1,0 +1,11 @@
+markdown: rdiscount
+pygments: true
+permalink: /posts/:title
+rdiscount:
+  extensions: [smart]
+
+name: Jarrod Taylor
+url: http://jarrodTaylorMade.com
+description: But I don't think of you
+github: JarrodCTaylor
+gravatar_url: https://secure.gravatar.com/avatar/b994c2f1ba0f20a727146444cab9b1a6
