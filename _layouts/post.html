@@ -2,7 +2,7 @@
 layout: layout
 ---
 
-<section class="content">
+<article>
   <h1>
     <a href="{{ page.url }}">{{ page.title }}</a>
   </h1>
@@ -12,5 +12,6 @@ layout: layout
   </section>
 
   {{ content }}
-
-</section>
+  <div class="pull"></div>
+  {% include disqus.html %}
+</article>
