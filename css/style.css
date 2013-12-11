@@ -67,7 +67,7 @@ code,kbd,pre,samp {
 }
 
 pre {
-  white-space: pre-wrap;
+  /* white-space: pre-wrap; */
 }
 
 q {
@@ -616,7 +616,7 @@ code {
   font-size: 90%;
   color: #c7254e;
   background-color: #f9f2f4;
-  white-space: nowrap;
+  /* white-space: nowrap; */
   border-radius: 4px;
 }
 
@@ -642,7 +642,7 @@ pre code {
   padding: 0;
   font-size: inherit;
   color: inherit;
-  white-space: pre-wrap;
+  /* white-space: pre-wrap; */
   background-color: transparent;
   border: 0;
 }
@@ -6343,12 +6343,11 @@ ul.listing li {
   list-style-type: none;
   padding: 7px 5px;
   border-bottom: 1px solid #EEE;
+  padding-bottom: 10px;
 }
 
 ul.listing li span {
   padding-top: 3px;
-  float: right;
-  /* text-transform: uppercase; */
   font-size: 12px;
   color: #999;
 }
@@ -6356,6 +6355,25 @@ ul.listing li span {
 .navbar-blog,.navbar-blog a.brand {
   font-weight: 100;
   /* text-transform: uppercase; */
+}
+
+.post_tags {
+  margin-top: 11px;
+  float: right;
+  margin-top: 14px;
+}
+
+.post_date {
+  float: left;
+  margin-top: -17px;
+}
+
+.post_date_tags_view {
+    float: right;
+}
+
+ul.listing li.li_tags_view {
+    padding-bottom: 7px;
 }
 
 #footer {
