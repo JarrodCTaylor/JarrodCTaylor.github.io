@@ -6316,6 +6316,10 @@ article section.byline,.content section.byline {
   color: #999;
 }
 
+article section.tags_byline, .content section.tags_byline {
+  margin-top: -25px;
+}
+
 article.about p,.content.about p,article.error,.content.error {
   text-align: center;
   font-size: 1.3em;

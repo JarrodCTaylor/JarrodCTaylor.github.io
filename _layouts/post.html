@@ -10,6 +10,12 @@ layout: layout
   <section class="byline">
     {{ page.date | date: "%B %e, %Y" }}
   </section>
+  <section class="byline tags_byline">
+    Tags:
+    {% for tag in page.tags %}
+      <a href="/tags/{{tag}}">{{tag}}</a>
+    {% endfor %}
+  </section>
 
   {{ content }}
   <div class="pull"></div>
