@@ -94,7 +94,6 @@ the same thing we just did here.
 We could rewrite the example above with the more idiomatic decorator syntax.
 
 ``` python
-python
 def decorate_hello(func):
     def decorated_hello():
       print "I will call your function next"
@@ -120,7 +119,7 @@ for you I can give you an example of where decorators come in handy and offer
 one that may be of practical use as you develop your Python programs.
 
 One of the most common use cases that I encounter is some type of
-`loggin_required` decorator. Often when developing web apps we want to make
+`login_required` decorator. Often when developing web apps we want to make
 sure that a user is authenticated prior to serving a page. There would be no
 sense in repeating authentication code in every view that requires it and as a
 bonus, the decorator syntax above a view declaration is a great reminder of that
