@@ -139,7 +139,7 @@ import functools
 
 def timer(decorated_method):
 
-        @functools.wraps(decorated_method)  # So we can maintain the original attributes __name__ etc
+        @functools.wraps(decorated_method)  # maintain the original attributes __name__ etc
         def wrapper(*args, **kwargs):
             start = time.time()
             method_to_time = decorated_method(*args, **kwargs)
