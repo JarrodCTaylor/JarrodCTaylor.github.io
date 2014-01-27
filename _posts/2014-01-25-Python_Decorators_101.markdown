@@ -5,7 +5,7 @@ tags: python
 category: posts
 ---
 
-## What is a decorator
+## What is a decorator?
 
 The python [wiki](https://wiki.python.org) defines a decorator as "a specific change to the Python
 syntax that allows us to more conveniently alter functions and methods". The
