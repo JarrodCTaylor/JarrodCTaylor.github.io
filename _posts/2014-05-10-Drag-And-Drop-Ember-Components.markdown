@@ -6,15 +6,15 @@ category: posts
 ---
 
 # Introduction
-Features like drag and drop are one of the many user interfaces that have come
-to be expected in modern web applications. HTML5 defines an event-based
-mechanism and JavaScript API that allows us to make just about any element on a
-page be draggable. Combine that with the power of Ember and we can easily
-create reusable draggable components for our web applications.
+Drag and drop is one of the many user interface elements that has come to be
+expected in modern web applications. HTML5 defines an event-based mechanism
+and JavaScript API which allows us to make just about any element on a page
+draggable. Combine that with the power of Ember and we can easily create
+reusable draggable components for our web applications.
 
 # The Example
-For our example we will assume that we are creating some kind of file browser
-and we would like to be able to drag files from a folder to the trash.
+For our example we will assume that we are creating a file browser and we would
+like to be able to drag files from a folder to the trash.
 
 ## The Route
 To begin we will create our index route. We will have a model that consists of
@@ -44,8 +44,8 @@ displays the file name. There are a number of events that fire during various
 stages of the drag and drop process that we can utilize in our applications.
 We have hooks for `dragStart`, `dragEnter`, `dragOver`, `dragLeave`, `drag`,
 `drop` and `dragEnd`.  In our example we are going to be moving files between
-arrays, to accomplish this we need the pk of the file we want to move.  We will
-use the dragStart event to set the pk data that is going to be transferred when
+arrays, to accomplish this we need the `id` of the file we want to move.  We will
+use the `dragStart` event to set the `id` data that is going to be transferred when
 we drop our file.
 
 ``` javascript
@@ -55,7 +55,7 @@ App.DraggableFileComponent = Ember.Component.extend({
   }
 });
 ```
-We create the template for the `draggable-file` component
+We create the template for the `draggable-file` component.
 
 ``` text
 {% raw %}
@@ -80,16 +80,16 @@ We can now add our component to the index route.
 {% endraw %}
 ```
 
-What we have at this point is three draggable file elements on our page. This
-is only have the equation though so let's give our users somewhere to drop the
+What we have at this point are three draggable file elements on our page. This
+is only half the equation though so let's give our users somewhere to drop the
 files.
 
 ## Trash Can Component
-Our trash can component is going to utilize a few of the other event hooks
-that were mentioned earlier. Specifically we are going to prevent the default
-event that is fired when we dragOver our component and we want to move our file
-objects when they are dropped in the trash can.
-
+Our trash can component is going to utilize a few of the other event hooks that
+were mentioned earlier. Specifically, we are going to prevent the default event
+that is fired when we `dragOver` our trash can component. When we `drop` a
+file object in the trash we want to move it from the `inFolder` array to the
+`inTrash` array.
 
 ``` javascript
 App.DroppableTrashComponent = Ember.Component.extend({
@@ -105,7 +105,7 @@ App.DroppableTrashComponent = Ember.Component.extend({
 });
 ```
 
-We create the template for the `droppable-trash` component
+We create the template for the `droppable-trash` component.
 
 ``` text
 <script type="text/x-handlebars" data-template-name="components/droppable-trash">
@@ -113,7 +113,7 @@ We create the template for the `droppable-trash` component
 </script>
 ```
 
-Finally we can add our trash can component and the inTrash array to our index
+Finally, we can add our trash can component and the inTrash array to our index
 template to make it look like this.
 
 ``` text
