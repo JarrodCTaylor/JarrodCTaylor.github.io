@@ -122,6 +122,13 @@ article {
     .clearfix();
 }
 
+.col-lg-2 {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
 @media(min-width:768px) {
   .container {
     max-width: 750px;
@@ -131,6 +138,15 @@ article {
 @media(min-width:992px) {
   .container {
     max-width: 970px;
+  }
+  .col-lg-2 {
+    float: left;
+  }
+  .col-lg-2 {
+    width: 16.66666667%;
+  }
+  .col-lg-offset-4 {
+    margin-left: 30.5%;
   }
 }
 
