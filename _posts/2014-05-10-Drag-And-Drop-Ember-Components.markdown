@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Drag And Drop Ember Components
+title: Drag and Drop Ember Components
 tags: ember
 category: posts
 ---
