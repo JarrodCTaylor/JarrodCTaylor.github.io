@@ -82,7 +82,7 @@ App.DateField = Ember.TextField.extend({
 
 ## The Template
 Our template simply displays: the date object, the date object formatted as a
-string and weather or not the date entered is valid. Make sure that moment.js
+string and whether or not the date entered is valid. Make sure that moment.js
 and pikaday.js are available to our application.
 
 ``` text
