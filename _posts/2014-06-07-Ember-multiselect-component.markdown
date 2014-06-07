@@ -42,7 +42,7 @@ App.IndexRoute = Ember.Route.extend({
 ## The Component
 In our component we actually wrap the jQuery plugin. The `didInsertElement`
 event is fired when the component is added to the page, and the `_initializeMulti`
-property is called when this event occures. At this point the internals of the
+property is called when this event occurs. At this point the internals of the
 property are straight from the multiselct.js documentation. We use a jQuery
 selector to grab the field with a class of `multi` and call the `multiSelect`
 method on it.  For this examle we are just doing a console log when a selection
