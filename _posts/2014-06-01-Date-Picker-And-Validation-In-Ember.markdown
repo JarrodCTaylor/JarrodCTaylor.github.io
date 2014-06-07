@@ -106,3 +106,10 @@ Here is a live demo of the example provided. I have added some CSS to indicate
 if the date is valid or not and some minimal styling.
 
   <a class="jsbin-embed" href="http://emberjs.jsbin.com/viguqidu/1/embed?output">Ember Starter Kit</a><script src="http://static.jsbin.com/js/embed.js"></script>
+
+# Alternative
+After initially publishing this post I was asked about alternatives to using a
+date picker. Here is a working example of another option. Using an input mask
+we guide what the user enters in the field and validate in a similar
+manner.
+  <a class="jsbin-embed" href="http://emberjs.jsbin.com/cutegude/2/embed?output">Ember Starter Kit</a><script src="http://static.jsbin.com/js/embed.js"></script>
