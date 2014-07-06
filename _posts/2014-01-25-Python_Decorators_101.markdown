@@ -5,7 +5,7 @@ tags: python
 category: posts
 ---
 
-## What is a decorator?
+## What Is A Decorator
 
 The python [wiki](https://wiki.python.org) defines a decorator as "a specific change to the Python
 syntax that allows us to more conveniently alter functions and methods". The
@@ -15,7 +15,7 @@ decorators we must understand two fundamental Python concepts.
 1. Functions can return functions.
 2. Functions can take other functions as arguments.
 
-## Functions that return functions
+## Functions That Return Functions
 
 In Python everything is an object including functions. One thing that this means
 is we can have our functions return other functions. It is really not as
@@ -42,7 +42,7 @@ itself with `return returned_function`. To prove that it worked we assign the
 returned function to a variable `example` and then call the function
 as we would any other regular function.
 
-## Functions as an argument to other functions
+## Functions As An Argument To Other Functions
 
 Now that we have seen that we can return functions we are half way to
 understanding decorators. Next up we need to understand that functions can
@@ -62,7 +62,7 @@ accepts_a_function(hello)
 Here we pass a function object as an argument to `accepts_a_function` which
 prints a line of text and then calls the function that was passed to it.
 
-## Combine the two steps and we have a decorator
+## Combine The Two Steps And We Have A Decorator
 
 Now we are all set to write our first actual Python decorator. Let's rewrite
 the example from above as a decorator.
@@ -111,7 +111,7 @@ The `@decorated_hello` syntax says that we want to pass the `hello` function as
 an argument to `decorate_hello` now when we call `hello()` what we are actually
 doing is calling `decorate_hello(hello)`.
 
-## Do I need to use this?
+## Do I Need To Use This?
 
 Now that we understand what a decorator is and how we go about writing one,
 you may be asking yourself "do I need to use this?". Although I can't answer that
