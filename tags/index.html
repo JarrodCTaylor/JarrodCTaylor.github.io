@@ -1,0 +1,29 @@
+---
+layout: layout
+title: "All Tags"
+---
+
+<div class="container">
+  <section class="content">
+    <h1>/tags</h1>
+    <ul class="listing">
+      {% for tag in site.tags %}
+        <li class="li_tags_view">
+          <a href="/tags/{{ tag | first }}">{{ tag | first }} ({{ tag | last | size }})</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+
+<div class="container">
+  <section class="content">
+    <div class="tags">
+      {% for tag in site.tags %}
+          <li style="font-size: {{ tag | last | size | times: 100 | divided_by: site.tags.size | plus: 40 }}%">
+              <a class="tag" href="/tags/{{ tag | first }}/">{{ tag | first }} ({{ tag | last | size }})</a>
+          </li>
+      {% endfor %}
+    </div>
+  </section>
+</div>

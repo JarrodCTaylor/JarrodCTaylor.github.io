@@ -188,3 +188,41 @@ ul {
     }
 }
 
+.tags {
+  list-style: none;
+  padding: 0;
+  text-align: justify; 
+  li {
+    display: inline-block;
+    margin: 0 25px 25px 0; 
+    &:last-child {
+      margin-right: 0; 
+    }
+  }
+}
+
+.tag {
+  background: #F8F8F8;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  box-shadow: 1px 1px 2px #ccc;
+  -webkit-box-shadow: 1px 1px 2px #ccc;
+  -moz-box-shadow: 1px 1px 2px #ccc;
+  color: #333;
+  padding: 2px 8px 2px 8px;
+  text-decoration: none; 
+
+  &:visited {
+    color: #333;
+  }
+
+  &:hover {
+    text-decoration: none;
+    color: #428bca;
+    top: 1px;
+    position: relative;
+    box-shadow: none;
+  }
+}
+
