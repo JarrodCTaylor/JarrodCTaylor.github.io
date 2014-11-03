@@ -371,6 +371,7 @@ h6 {
   text-shadow: 0 1px 5px #aaa;
 }
 .article_and_content_base img {
+  border-radius: 4px;
   max-width: 70%;
   max-height: 70%;
   display: block;
@@ -427,6 +428,7 @@ article.error h1 {
   text-shadow: 0 1px 5px #aaa;
 }
 article img {
+  border-radius: 4px;
   max-width: 70%;
   max-height: 70%;
   display: block;
@@ -483,6 +485,7 @@ article div.pull {
   text-shadow: 0 1px 5px #aaa;
 }
 .content img {
+  border-radius: 4px;
   max-width: 70%;
   max-height: 70%;
   display: block;
@@ -1063,7 +1066,7 @@ pre code {
   border-radius: 5px;
 }
 .highlight pre {
-  margin: 0 0 10.5px;
+  margin: 0px;
   background: none;
 }
 .hightlight code {
