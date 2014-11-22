@@ -22,7 +22,7 @@ building a tested compojure web app backed by a Postgres Database.
 The project we will build and test over the course of this blog series is an
 address book application. We will build the app using ring and Compojure and
 persist the data in a Postgres Database. The app will be a traditional client
-server app with no JavaScript. Here is a teaser of the final product. ![Address Book Gif](/assets/address-book.gif)
+server app with no JavaScript. Here is a teaser of the final product. ![Address Book Gif](https://cloud.githubusercontent.com/assets/4416952/5156018/c8f0475a-726a-11e4-8c46-a5fa9e62e582.gif)
 
 # Compojure / Ring the TL;DR Version
 
