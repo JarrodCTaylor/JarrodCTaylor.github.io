@@ -131,7 +131,7 @@ our GET request from a new function named `example-get`. Update your
 
 Before we test out our new templates, let us also add some content to our style
 sheet so we can be sure that is being properly included. Create this file
-`resources/public/css/address_book.css` and add to it, the following:
+`resources/public/css/address-book.css` and add to it, the following:
 
 ``` css
 body {
