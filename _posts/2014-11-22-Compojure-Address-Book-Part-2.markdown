@@ -155,7 +155,7 @@ response equal to "Example GET" so we need to change our assertion to
 
 # Wrap Up
 
-At this point we have successfully laid the ground work for the majoirty of our
+At this point we have successfully laid the ground work for the majority of our
 application. In the next installment we will add the real style sheet and
 create hiccup templates for our primary views.
 
