@@ -107,12 +107,14 @@ to include our final two routes. Update the file to look like the following:
 ```
 
 A few changes to take note of here. We have changed the `get-route` to check
-for a parameter of `contact-id` since we will use the route for GET and POST.
-Instead of always calling `read-contact` for each contact we now call the
-function `display-contact` that will display the edit contact from in the event
-that we have a contact-id that matches a given contact and the `read-contact`
-template in all other cases. The update and delete routes don't introduce any
-new concepts. They get the needed parameters from the request and call the
+for a parameter of `contact-id`. We will be using the route to both get a
+list off all the users the same as we have been doing and also to make a
+request which will allow us to edit a specific user.  Instead of always calling
+`read-contact` for each person in the address book we now call the function
+`display-contact` that will display the edit contact from in the event that we
+have a contact-id that matches a given contact and the `read-contact` template
+in all other cases. The update and delete routes don't introduce any new
+concepts. They get the needed parameters from the request and call the
 appropriate queries.
 
 # Add More Tests
