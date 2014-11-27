@@ -27,7 +27,7 @@ UPDATE contacts SET name = :name, phone = :phone, email = :email
 
 The queries we have written previously haven't required any keyword arguments.
 Here we can see the syntax for using keywords in our queries. In
-`delete-contat<!`  for example `:id` is going to be replaced with the value of
+`delete-contact<!`  for example `:id` is going to be replaced with the value of
 `:id` in the keyword map that we pass into the query function.
 
 Next let's add a template which will allow us to edit a contact. Add the following template to `src/address_book/core/views/address_book_layout.clj`.
