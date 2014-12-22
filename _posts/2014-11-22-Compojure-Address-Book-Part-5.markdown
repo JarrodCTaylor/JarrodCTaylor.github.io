@@ -131,7 +131,7 @@ similar to the existing ones. Add the following tests to `test/address_book/core
           (count (query/all-contacts {} {:connection test-db})) => 1
           (first (query/all-contacts {} {:connection test-db})) => {:id 1 :name "Jrock" :phone "(999) 888-7777" :email "jrock@test.com"})))
 
-    (fact "Test DELETED a post to /delete/<contact-id> deletes desired contact form database"
+    (fact "Test DELETED a post to /delete/<contact-id> deletes desired contact from database"
       (with-redefs [db test-db]
         (query/insert-contact<! {:name "JT" :phone "(321)" :email "JT@JT.com"} {:connection test-db})
         (count (query/all-contacts {} {:connection test-db})) => 1
