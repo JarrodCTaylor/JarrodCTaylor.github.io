@@ -30,7 +30,8 @@ Here we can see the syntax for using keywords in our queries. In
 `delete-contact<!`  for example `:id` is going to be replaced with the value of
 `:id` in the keyword map that we pass into the query function.
 
-Next let's add a template which will allow us to edit a contact. Add the following template to `src/address_book/core/views/address_book_layout.clj`.
+Next let's add a template which will allow us to edit a contact. Add the
+following template to `src/address_book/core/views/address_book_layout.clj`.
 
 ``` clojure
 (defn edit-contact [contact]
@@ -63,7 +64,6 @@ to include our final two routes. Update the file to look like the following:
                                                                  read-contact
                                                                  add-contact-form
                                                                  edit-contact]]
-            [address-book.core.models.database :refer [db]]
             [address-book.core.models.query-defs :as query]))
 
 (defn display-contact [contact contact-id]
@@ -75,19 +75,19 @@ to include our final two routes. Update the file to look like the following:
   (let [name  (get-in request [:params :name])
         phone (get-in request [:params :phone])
         email (get-in request [:params :email])]
-    (query/insert-contact<! {:name name :phone phone :email email} {:connection db})
+    (query/insert-contact<! {:name name :phone phone :email email})
     (response/redirect "/")))
 
 (defn get-route [request]
   (let [contact-id (get-in request [:params :contact-id])]
     (common-layout
-      (for [contact (query/all-contacts {} {:connection db})]
+      (for [contact (query/all-contacts)]
         (display-contact contact contact-id))
       (add-contact-form))))
 
 (defn delete-route [request]
   (let [contact-id (get-in request [:params :contact-id])]
-    (query/delete-contact<! {:id (Integer. contact-id)} {:connection db})
+    (query/delete-contact<! {:id (Integer. contact-id)})
     (response/redirect "/")))
 
 (defn update-route [request]
@@ -95,7 +95,7 @@ to include our final two routes. Update the file to look like the following:
         name       (get-in request [:params :name])
         phone      (get-in request [:params :phone])
         email      (get-in request [:params :email])]
-    (query/update-contact<! {:name name :phone phone :email email :id (Integer. contact-id)} {:connection db})
+    (query/update-contact<! {:name name :phone phone :email email :id (Integer. contact-id)})
     (response/redirect "/")))
 
 (defroutes address-book-routes
@@ -124,23 +124,18 @@ similar to the existing ones. Add the following tests to `test/address_book/core
 
 ``` clojure
   (fact "Test UPDATE a post request to /edit/<contact-id> updates desired contact information"
-      (with-redefs [db test-db]
-        (query/insert-contact<! {:name "JT" :phone "(321)" :email "JT@JT.com"} {:connection test-db})
-        (let [response (app (mock/request :post "/edit/1" {:id "1" :name "Jrock" :phone "(999) 888-7777" :email "jrock@test.com"}))]
-          (:status response) => 302
-          (count (query/all-contacts {} {:connection test-db})) => 1
-          (first (query/all-contacts {} {:connection test-db})) => {:id 1 :name "Jrock" :phone "(999) 888-7777" :email "jrock@test.com"})))
+    (query/insert-contact<! {:name "JT" :phone "(321)" :email "JT@JT.com"})
+    (let [response (app (mock/request :post "/edit/1" {:id "1" :name "Jrock" :phone "(999) 888-7777" :email "jrock@test.com"}))]
+      (:status response) => 302
+      (count (query/all-contacts)) => 1
+      (first (query/all-contacts)) => {:id 1 :name "Jrock" :phone "(999) 888-7777" :email "jrock@test.com"}))
 
     (fact "Test DELETED a post to /delete/<contact-id> deletes desired contact from database"
-      (with-redefs [db test-db]
-        (query/insert-contact<! {:name "JT" :phone "(321)" :email "JT@JT.com"} {:connection test-db})
-        (count (query/all-contacts {} {:connection test-db})) => 1
-        (let [response (app (mock/request :post "/delete/1" {:id 1}))]
-          (count (query/all-contacts {} {:connection test-db})) => 0)))
+      (query/insert-contact<! {:name "JT" :phone "(321)" :email "JT@JT.com"})
+      (count (query/all-contacts)) => 1
+      (let [response (app (mock/request :post "/delete/1" {:id 1}))]
+        (count (query/all-contacts)) => 0))
 ```
-
-We again use `with-redefs` to redefine the `db` to point to our test database
-before making the POST requests to our app.
 
 # Wrap Up
 

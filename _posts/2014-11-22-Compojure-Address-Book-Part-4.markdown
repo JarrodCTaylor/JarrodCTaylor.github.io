@@ -10,8 +10,8 @@ category: posts
 At this point we have an address book that will allow us to add new contacts.
 However, we are not persisting our new additions. It's time to change that. You
 will need to have [Postgres](http://www.postgresql.org/) installed. If you are
-using a Mac, [postgresapp](http://postgresapp.com/) is a very simple way of
-installing. If you are on another OS you will need to follow the install
+using a Mac, [postgresapp](http://postgresapp.com/) is a very simple way to get
+up and running.  If you are on another OS you will need to follow the install
 instructions from the Postgres website.
 
 Once you have Postgres installed and running we are going to create a test user
@@ -32,45 +32,93 @@ in Postgres, issue the following commands:
 
 ## Replacing the Atom with a Database
 
-In order to use Postgres in our application we need to add the following to our
-dependencies in `project.clj`.
+In order to use Postgres in our application we are going to add a few
+dependencies in our `project.clj`.  We are going to bring in
+`org.clojure/java.jdbc`, `postgresql/postgresql`, `yesql` and `environ`. I will
+give a brief overview of what each one does before we modify our file.
 
-``` clojure
-[org.clojure/java.jdbc "0.3.5"]
-[postgresql/postgresql "9.1-901-1.jdbc4"]
-[yesql "0.5.0-beta2"]
-```
-
-`jdbc` and the Postgres driver allow us to access the database.  We are also going
-to use [yesql](https://github.com/krisajenkins/yesql) which is a Clojure
-library for using SQL. The idea behind yesql is we can use actual SQL in our
-clojure program instead of a DSL that translates to SQL. I will give an
-overview of yesql shortly when we begin writing database queries but, first
-let's tell the application how to connect to our database.
+`jdbc` and the Postgres driver allow us to access the database. The [environ](https://github.com/weavejester/environ)
+library will make it so we can easily use environment variables in our
+application. By doing this, we can connect to different databases for test,
+dev and production. We are also going to use [yesql](https://github.com/krisajenkins/yesql)
+which is a Clojure library for using SQL. The idea behind yesql is using
+actual SQL in our clojure program instead of a DSL that translates to SQL. I
+will give some more detail about yesql when we begin writing database queries
+but first, let's tell the application how to connect to our database.
 
 Create a file called `src/address_book/core/models/database.clj` and populate
 it with the following:
 
 ``` clojure
-(ns address-book.core.models.database)
+(ns address-book.core.models.database
+  (:require [environ.core :refer [env]]))
 
-(def database
-  {:dev  {:subprotocol "postgresql"
-          :subname "//127.0.0.1:5432/address_book"
-          :user "address_book_user"
-          :password "password1"}
-   :test {:subprotocol "postgresql"
-          :subname "//127.0.0.1:5432/address_book_test"
-          :user "address_book_user"
-          :password "password1"}})
-
-(def db (database :dev))
+(def database {:subprotocol "postgresql"
+               :subname     (env :database-url)
+               :user        (env :database-user)
+               :password    (env :database-password)})
 ```
 
-Here we have defined the connection to our `db` by default we are using the
-`:dev` database. Structuring the connections this way will allow us to redefine
-`db` in our tests and use the `:test` connection.
+Here we have defined the connection to our database. We are using the environ
+library to pull the database name, user and password for the correct
+environment. Structuring the connections this way accomplishes two major
+goals. First, we will easily be able to use a different database for test, dev
+and production. Second, we are keeping our configuration separate from our
+code.
 
+Now let's create `profiles.clj` in the root of our project to store our test
+and dev environment variables. In your real world apps you will want to keep
+this file out of version control. For our example project you will find the
+file in the Github repo.
+
+``` clojure
+{:dev-env-vars  {:env {:database-url      "//127.0.0.1:5432/address_book"
+                       :database-user     "address_book_user"
+                       :database-password "password1"}}
+
+ :test-env-vars {:env {:database-url      "//127.0.0.1:5432/address_book_test"
+                       :database-user     "address_book_user"
+                       :database-password "password1"}}}
+```
+
+The last part of setting our project up to use environment variables involves
+defining a dev and test profile in our `project.clj`. We will also include our
+new dependencies. Update the file to look like the following:
+
+``` clojure
+(defproject address-book "0.1.0-SNAPSHOT"
+  :description "FIXME: write description"
+  :url "http://example.com/FIXME"
+  :min-lein-version "2.5.0"
+
+  :ring {:handler address-book.core.handler/app
+         :init    address-book.core.handler/init}
+
+  :dependencies   [[org.clojure/clojure   "1.6.0"]
+                   [compojure             "1.2.0"]
+                   [ring/ring-defaults    "0.1.2"]
+                   [hiccup                "1.0.5"]
+                   [org.clojure/java.jdbc "0.3.6"]
+                   [postgresql/postgresql "9.3-1102.jdbc41"]
+                   [yesql                 "0.5.0-beta2"]
+                   [environ               "1.0.0"]]
+
+  :plugins        [[lein-ring             "0.8.13"]
+                   [lein-environ          "1.0.0"]]
+
+  :profiles {:test-local {:dependencies [[midje "1.6.3"]
+                                         [javax.servlet/servlet-api "2.5"]
+                                         [ring-mock "0.1.5"]]
+
+                           :plugins     [[lein-midje "3.1.3"]]}
+
+             ;; Set these in ./profiles.clj
+             :test-env-vars {}
+             :dev-env-vars  {}
+
+             :test [:test-local :test-env-vars]
+             :dev  [:dev-env-vars]})
+```
 
 Now we can write some queries. Using yesql we can write multiple SQL statements
 in a single SQL file. The format for the file is as follows:
@@ -87,7 +135,11 @@ with the following:
 ``` sql
 -- name: all-contacts
 -- Selects all contacts
-SELECT * FROM contacts;
+SELECT id
+       ,name
+       ,phone
+       ,email
+FROM contacts;
 
 -- name: insert-contact<!
 -- Queries a single contact
@@ -120,15 +172,15 @@ the following:
 
 ``` clojure
 (ns address-book.core.models.query-defs
-  (:require [address-book.core.models.database :refer [database db]]
+  (:require [address-book.core.models.database :refer [database]]
             [yesql.core :refer [defqueries]]))
 
-(defqueries "address_book/core/models/address_book_queries.sql" {:connection db})
+(defqueries "address_book/core/models/address_book_queries.sql" {:connection database})
 ```
 
-We can now require the `query-defs` file to utilize our queries. Let's go
+We can now require the `query-defs.clj` file to utilize our queries. Let's go
 ahead and update our init function in `src/address_book/core/handler.clj`. The
-requires and init function should now look like this.
+require and init function should now look like this.
 
 ``` clojure
 (ns address-book.core.handler
@@ -140,11 +192,8 @@ requires and init function should now look like this.
             [address-book.core.models.query-defs :as query]))
 
 (defn init []
-  (query/create-contacts-table-if-not-exists! {} {:connection db}))
+  (query/create-contacts-table-if-not-exists!))
 ```
-
-We pass our query two maps. The first is a map of any arguments that our query
-expects and the second is the database we are executing the query against.
 
 We can now replace the atom in
 `src/address_book/core/routes/address_book_routes.clj` with queries against our
@@ -164,12 +213,12 @@ database. Update the file to look like the following:
   (let [name  (get-in request [:params :name])
         phone (get-in request [:params :phone])
         email (get-in request [:params :email])]
-    (query/insert-contact<! {:name name :phone phone :email email} {:connection db})
+    (query/insert-contact<! {:name name :phone phone :email email})
     (response/redirect "/")))
 
 (defn get-route [request]
   (common-layout
-    (for [contact (query/all-contacts {} {:connection db})]
+    (for [contact (query/all-contacts)]
       (read-contact contact))
     (add-contact-form)))
 
@@ -189,46 +238,38 @@ contents and then we will discuss the changes.
   (:require [clojure.test :refer :all]
             [ring.mock.request :as mock]
             [address-book.core.handler :refer :all]
-            [address-book.core.models.database :refer [database db]]
             [address-book.core.models.query-defs :as query]))
 
-(def test-db (database :test))
-
 (facts "Example GET and POST tests"
-  (with-state-changes [(before :facts (query/create-contacts-table-if-not-exists! {} {:connection test-db}))
-                       (after  :facts (query/drop-contacts-table!                 {} {:connection test-db}))]
+  (with-state-changes [(before :facts (query/create-contacts-table-if-not-exists!))
+                       (after  :facts (query/drop-contacts-table!))]
 
   (fact "Test GET"
-    (with-redefs [db test-db]
-      (query/insert-contact<! {:name "JT" :phone "(321)" :email "JT@JT.com"} {:connection test-db})
-      (query/insert-contact<! {:name "Utah" :phone "(432)" :email "J@Buckeyes.com"} {:connection test-db})
-      (let [response (app (mock/request :get "/"))]
-        (:status response) => 200
-        (:body response) => (contains "<div class=\"column-1\">JT</div>")
-        (:body response) => (contains "<div class=\"column-1\">Utah</div>"))))
+    (query/insert-contact<! {:name "JT" :phone "(321)" :email "JT@JT.com"})
+    (query/insert-contact<! {:name "Utah" :phone "(432)" :email "J@Buckeyes.com"})
+    (let [response (app (mock/request :get "/"))]
+      (:status response) => 200
+      (:body response) => (contains "<div class=\"column-1\">JT</div>")
+      (:body response) => (contains "<div class=\"column-1\">Utah</div>")))
 
   (fact "Test POST"
-    (with-redefs [db test-db]
-      (count (query/all-contacts {} {:connection test-db})) => 0
-      (let [response (app (mock/request :post "/post" {:name "Some Guy" :phone "(123)" :email "a@a.cim"}))]
-        (:status response) => 302
-        (count (query/all-contacts {} {:connection test-db})) => 1)))))
+    (count (query/all-contacts)) => 0
+    (let [response (app (mock/request :post "/post" {:name "Some Guy" :phone "(123)" :email "a@a.cim"}))]
+      (:status response) => 302
+      (count (query/all-contacts)) => 1))))
 ```
 
-We start out defining the test-db that we are going to use so as not to alter any
-working data. Midje allows us to define functions that will run before and
-after every test. We define those in the `with-state-changes` function. We will
-create the test table before every test and destroy it after. The only remaining
-part we need to do in order to run our production code against a test database
-is redefine the database connection with our `test-db`. We use `with-redefs`
-to temporarily redefine `db` to point to our `test-db` for the duration of the
-test.
+Midje allows us to define functions that will run before and after every test.
+We define those in the `with-state-changes` function. We will create the test
+table before every test and destroy it after. We will now run our tests with
+`lein with-profile test midje`. This will use the test profile which uses
+environ to pull in the connections to our test database.
 
 # Wrap Up
 
-Our application is all most finished. All that remains is adding routes to edit
+Our application is allmost finished. All that remains is adding routes to edit
 and delete contacts from our address book. We will cover those in the final
 installment of this series. As usual you can find the code for this installment
-on github in [Part 4](https://github.com/JarrodCTaylor/compojure-address-book/tree/4).
+on github in [Part 4](https://github.com/JarrodCTaylor/compojure-address-book).
 
 ## [Read the fifth and final part in the series](/posts/Compojure-Address-Book-Part-5/)
