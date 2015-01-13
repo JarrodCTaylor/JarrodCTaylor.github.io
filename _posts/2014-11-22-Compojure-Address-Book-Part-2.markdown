@@ -59,7 +59,7 @@ this we need to add a line to the `:ring` map in `project.clj`.
        :init    address-book.core.handler/init}
 ```
 
-Finally, we can move our existing routes into `/src/address_book/core/routes`.
+Finally, we can move our existing routes into `/src/address_book/core/routes/address_book_routes.clj`.
 
 ``` clojure
 (ns address-book.core.routes.address-book-routes
@@ -113,7 +113,7 @@ templates. To get our feet wet with templates let's extend our basic GET route
 to use the `common-layout`. We need to require the common-layout in
 `src/address_book/core/routes.clj` and we will generate the response body for
 our GET request from a new function named `example-get`. Update your
-`routes.clj` with the following pieces:
+`address_book_routes.clj` with the following pieces:
 
 ``` clojure
 (ns address-book.core.routes.address-book-routes

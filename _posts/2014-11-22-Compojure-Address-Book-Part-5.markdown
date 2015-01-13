@@ -139,7 +139,6 @@ similar to the existing ones. Add the following tests to `test/address_book/core
 
 # Wrap Up
 
-We have arrived at the end of our tutorial. At this point we have a fully
-functioning and tested address book application that saves our data in a
-Postgres database. You can find the code for the finished project on github at
-[Compojure Address Book](https://github.com/JarrodCTaylor/compojure-address-book).
+At this point we have a fully functioning and tested address book application
+that saves our data in a Postgres database. You can find the code for the
+project on github at [Compojure Address Book](https://github.com/JarrodCTaylor/compojure-address-book).

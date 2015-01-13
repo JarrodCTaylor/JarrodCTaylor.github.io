@@ -167,7 +167,7 @@ Notice that when we are doing a INSERT/UPDATE/DELETE the function name needs to
 end with `<!`.
 
 Before we can execute a query we need to use yesql to read the file. Create a
-file called `src/address-book/core/models/query-defs.clj` and populate it with
+file called `src/address-book/core/models/query_defs.clj` and populate it with
 the following:
 
 ``` clojure
@@ -188,7 +188,6 @@ require and init function should now look like this.
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [address-book.core.routes.address-book-routes :refer [address-book-routes]]
-            [address-book.core.models.database :refer [db]]
             [address-book.core.models.query-defs :as query]))
 
 (defn init []
@@ -206,7 +205,6 @@ database. Update the file to look like the following:
             [address-book.core.views.address-book-layout :refer [common-layout
                                                                  read-contact
                                                                  add-contact-form]]
-            [address-book.core.models.database :refer [db]]
             [address-book.core.models.query-defs :as query]))
 
 (defn post-route [request]
@@ -270,6 +268,6 @@ environ to pull in the connections to our test database.
 Our application is allmost finished. All that remains is adding routes to edit
 and delete contacts from our address book. We will cover those in the final
 installment of this series. As usual you can find the code for this installment
-on github in [Part 4](https://github.com/JarrodCTaylor/compojure-address-book).
+on github in [Part 4](https://github.com/JarrodCTaylor/compojure-address-book/tree/4).
 
 ## [Read the fifth and final part in the series](/posts/Compojure-Address-Book-Part-5/)
