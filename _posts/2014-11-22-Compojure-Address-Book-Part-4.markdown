@@ -44,42 +44,25 @@ dev and production. We are also going to use [yesql](https://github.com/krisajen
 which is a Clojure library for using SQL. The idea behind yesql is using
 actual SQL in our clojure program instead of a DSL that translates to SQL. I
 will give some more detail about yesql when we begin writing database queries
-but first, let's tell the application how to connect to our database.
+but first, let's define the environment variables that we will use to connect to
+our databases.
 
-Create a file called `src/address_book/core/models/database.clj` and populate
-it with the following:
-
-``` clojure
-(ns address-book.core.models.database
-  (:require [environ.core :refer [env]]))
-
-(def database {:subprotocol "postgresql"
-               :subname     (env :database-url)
-               :user        (env :database-user)
-               :password    (env :database-password)})
-```
-
-Here we have defined the connection to our database. We are using the environ
-library to pull the database name, user and password for the correct
-environment. Structuring the connections this way accomplishes two major
-goals. First, we will easily be able to use a different database for test, dev
-and production. Second, we are keeping our configuration separate from our
-code.
-
-Now let's create `profiles.clj` in the root of our project to store our test
+Create `profiles.clj` in the root of our project to store our test
 and dev environment variables. In your real world apps you will want to keep
 this file out of version control. For our example project you will find the
 file in the Github repo.
 
 ``` clojure
-{:dev-env-vars  {:env {:database-url      "//127.0.0.1:5432/address_book"
-                       :database-user     "address_book_user"
-                       :database-password "password1"}}
-
- :test-env-vars {:env {:database-url      "//127.0.0.1:5432/address_book_test"
-                       :database-user     "address_book_user"
-                       :database-password "password1"}}}
+{:dev-env-vars  {:env {:database-url "postgres://address_book_user:password1@127.0.0.1:5432/address_book"}}
+ :test-env-vars {:env {:database-url "postgres://address_book_user:password1@127.0.0.1:5432/address_book_test"}}}
 ```
+
+Here we have defined the connection to our database. We will use the environ
+library to pull the database-url for the correct environment.  The test and dev
+environments will be determined by the `lein` commands we issue. Structuring
+the connections this way accomplishes two major goals. First, we will easily be
+able to use a different database for test, dev and production.  Second, we are
+keeping our configuration separate from our code.
 
 The last part of setting our project up to use environment variables involves
 defining a dev and test profile in our `project.clj`. We will also include our
@@ -95,15 +78,15 @@ new dependencies. Update the file to look like the following:
          :init    address-book.core.handler/init}
 
   :dependencies   [[org.clojure/clojure   "1.6.0"]
-                   [compojure             "1.2.0"]
-                   [ring/ring-defaults    "0.1.2"]
+                   [compojure             "1.3.1"]
+                   [ring/ring-defaults    "0.1.3"]
                    [hiccup                "1.0.5"]
                    [org.clojure/java.jdbc "0.3.6"]
                    [postgresql/postgresql "9.3-1102.jdbc41"]
-                   [yesql                 "0.5.0-beta2"]
+                   [yesql                 "0.5.0-rc1"]
                    [environ               "1.0.0"]]
 
-  :plugins        [[lein-ring             "0.8.13"]
+  :plugins        [[lein-ring             "0.9.1"]
                    [lein-environ          "1.0.0"]]
 
   :profiles {:test-local {:dependencies [[midje "1.6.3"]
@@ -172,10 +155,10 @@ the following:
 
 ``` clojure
 (ns address-book.core.models.query-defs
-  (:require [address-book.core.models.database :refer [database]]
+  (:require [environ.core :refer [env]]
             [yesql.core :refer [defqueries]]))
 
-(defqueries "address_book/core/models/address_book_queries.sql" {:connection database})
+(defqueries "address_book/core/models/address_book_queries.sql" {:connection (env :database-url)})
 ```
 
 We can now require the `query-defs.clj` file to utilize our queries. Let's go
@@ -265,7 +248,7 @@ environ to pull in the connections to our test database.
 
 # Wrap Up
 
-Our application is allmost finished. All that remains is adding routes to edit
+Our application is all most finished. All that remains is adding routes to edit
 and delete contacts from our address book. We will cover those in the final
 installment of this series. As usual you can find the code for this installment
 on github in [Part 4](https://github.com/JarrodCTaylor/compojure-address-book/tree/4).
