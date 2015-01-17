@@ -30,7 +30,7 @@ The [Heroku toolbelt](https://toolbelt.heroku.com/) is a CLI tool for managing
 Heroku apps. Follow the link and install the proper version for your OS. Once
 you have the toolbelt installed, issue the following command in your terminal:
 
-``` shell
+``` text
 heroku login
 ```
 
@@ -43,7 +43,7 @@ With the toolbelt installed and authentication credentials provided we are now
 ready to create the Heroku app. Create your new application with the following
 command:
 
-``` shell
+``` text
 heroku create your-name-address-book
 ```
 
@@ -54,7 +54,7 @@ We now have a empty Heroku application waiting for us to deploy.
 Before we deploy we are going to want to include the postgress add-on in our
 project. Issue the following command:
 
-``` shell
+``` text
 heroku addons:add heroku-postgresql:hobby-dev
 ```
 
@@ -118,14 +118,14 @@ conveniently generated for us when we install the postgress add-on.
 
 We are now ready to deploy our application. You can do so by issuing the following command:
 
-``` shell
+``` text
 git push heroku master
 ```
 
 When Heroku is finished taking care of business you can check and make sure
 everything went well:
 
-``` shell
+``` text
 heroku ps
 ```
 
