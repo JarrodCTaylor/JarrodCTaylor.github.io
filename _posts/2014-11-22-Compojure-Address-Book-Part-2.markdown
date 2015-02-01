@@ -75,10 +75,6 @@ Finally, we can move our existing routes into `/src/address_book/core/routes/add
   (POST "/post" [] example-post))
 ```
 
-At this point we should have the same app as we did at the end of part 1. The
-only differences are at this point is how it is structured and that we will have a
-new print when we do a `lein ring server`.
-
 # Hiccup Templates
 
 Hiccup is a library for representing HTML in Clojure. It uses vectors to
