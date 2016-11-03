@@ -1,6 +1,6 @@
 markdown: kramdown
 highlighter: rouge
-permalink: /posts/:title
+permalink: /posts/:title/
 rdiscount:
   extensions: [smart]
 title : Jarrod C Taylor

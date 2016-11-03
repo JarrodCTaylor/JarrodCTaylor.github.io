@@ -158,4 +158,4 @@ I have created a github repo that will have all the code for our project with
 tags corresponding to the parts of the blog. You can find all the code for this
 section in [Part 1](https://github.com/JarrodCTaylor/compojure-address-book/tree/1).
 
-## [Read Part 2 In The Series](/posts/Compojure-Address-Book-Part-2)
+## [Read Part 2 In The Series](/posts/Compojure-Address-Book-Part-2/)
