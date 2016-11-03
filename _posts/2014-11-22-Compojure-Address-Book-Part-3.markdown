@@ -212,4 +212,4 @@ database and cover how to write our tests using a test database that mirrors
 production. As usual you can find the code for this installment on
 github in [Part 3](https://github.com/JarrodCTaylor/compojure-address-book/tree/3).
 
-## [Read Part 4 In The Series](/posts/Compojure-Address-Book-Part-4/)
+## [Read Part 4 In The Series](/posts/Compojure-Address-Book-Part-4)

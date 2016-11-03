@@ -157,4 +157,4 @@ create hiccup templates for our primary views.
 
 You can find all the code for this section in [Part 2](https://github.com/JarrodCTaylor/compojure-address-book/tree/2).
 
-## [Read Part 3 In The Series](/posts/Compojure-Address-Book-Part-3/)
+## [Read Part 3 In The Series](/posts/Compojure-Address-Book-Part-3)

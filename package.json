@@ -1,6 +1,8 @@
 {
   "name": "JarrodCTaylor.github.io",
   "version": "0.0.1",
+  "repository": "https://github.com/JarrodCTaylor/JarrodCTaylor.github.io",
+  "license": "Unlicense",
   "dependencies": {
     "grunt-cli": "*",
     "grunt-contrib-less": "*",
