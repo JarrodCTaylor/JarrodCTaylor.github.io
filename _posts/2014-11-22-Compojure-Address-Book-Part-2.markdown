@@ -25,7 +25,7 @@ found route and most importantly the `app` definition. The `app` definition is
 where we combine all routes from our project and wrap them with any needed
 middleware.  You might be able to guess what we are going to keep in the two
 new directories. All the logic for the routes in the address book will go in
-`routes.clj` and `views.clj` is going to hold our soon to be introduced hiccup
+`routes` and `views` is going to hold our soon to be introduced hiccup
 templates.
 
 Let's restructure `src/address_book/core/handler.clj` so it only includes the following:
@@ -107,9 +107,9 @@ lein template came with an empty `resources` directory that our application can
 access. We will store our style sheet in here and serve it up with our
 templates. To get our feet wet with templates let's extend our basic GET route
 to use the `common-layout`. We need to require the common-layout in
-`src/address_book/core/routes.clj` and we will generate the response body for
-our GET request from a new function named `example-get`. Update your
-`address_book_routes.clj` with the following pieces:
+`src/address_book/core/routes/address_book_routes.clj` and we will generate the
+response body for our GET request from a new function named `example-get`.
+Update your `address_book_routes.clj` with the following pieces:
 
 ``` clojure
 (ns address-book.core.routes.address-book-routes
