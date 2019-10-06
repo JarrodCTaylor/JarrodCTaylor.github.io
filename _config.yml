@@ -5,8 +5,7 @@ rdiscount:
   extensions: [smart]
 title : Jarrod C Taylor
 production_url : http://jarrodctaylor.com
-description: "Vim, Python, Shell, Clojure and all things open source"
-disqus_shortname: jarrodctaylorcom
+description: "Clojure, Vim, Shell, Python and all things open source"
 author :
   name : Jarrod C Taylor
   github : JarrodCTaylor
