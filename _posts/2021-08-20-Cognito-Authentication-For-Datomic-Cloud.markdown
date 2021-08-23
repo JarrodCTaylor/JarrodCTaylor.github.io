@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Cognito Authenticated For Datomic Cloud
+title: Cognito Authentication For Datomic Cloud
 tags: clojure datomic
 category: posts
 ---
@@ -10,39 +10,39 @@ category: posts
 ## Preamble
 
 Apart from rhythm and blues you might be hard pressed to find an example of something
-more commonly found together than web requests and authentication. While what follows 
+more commonly found together than web requests and authentication. While what follows
 is but one of the almost countless ways to configure routes and authentication in a Datomic
 Cloud application, it will provide a respectable starting place.
 
 We will assume you have completed the [Datomic Cloud setup](https://www.youtube.com/watch?v=DsThGK5bZCQ). As you contemplate
-the possibilities of the blank canvas that is a new cloud stack, inspiration strikes! 
-Now with a clear picture in mind of the next billion-dollar startup, you are ready 
-to begin creating new users as soon as possible. The lack of user authentication is 
-the only thing standing in your way. Read on to see *one way* you might go about 
+the possibilities of the blank canvas that is a new cloud stack, inspiration strikes!
+Now with a clear picture in mind of the next billion-dollar startup, you are ready
+to begin creating new users as soon as possible. The lack of user authentication is
+the only thing standing in your way. Read on to see *one way* you might go about
 conquering that challenge.
 
 ## The Starting Place
 
 The API Gateway which is automatically created as part of the setup process
-includes a `$default` route. This is a catch-all and simply proxies every 
-request to the deployed ion. Our budding new startup is going to need 
-publicly accessible routes for prospective users to ask questions and 
-create accounts. It will also need authenticated routes so the users can... 
-well, let's keep this part quiet until the multi-billion dollar IPO. For 
+includes a `$default` route. This is a catch-all and simply proxies every
+request to the deployed ion. Our budding new startup is going to need
+publicly accessible routes for prospective users to ask questions and
+create accounts. It will also need authenticated routes so the users can...
+well, let's keep this part quiet until the multi-billion dollar IPO. For
 now, it is good enough to say that it will need authenticated routes.
 
 ## The Ion App
 
-The [Ion Cognito Exemplar](https://github.com/JarrodCTaylor/ion-cognito-exemplar) app consists of a reitit router that has 
+The [Ion Cognito Exemplar](https://github.com/JarrodCTaylor/ion-cognito-exemplar) app consists of a reitit router that has
 two endpoints;; one open to the public and one that requires authentication.
-The authed endpoint `/say-hello` uses the identity contained in a Cognito 
+The authed endpoint `/say-hello` uses the identity contained in a Cognito
 token to say hello to the user making the request by name.
 
 ### Deploy the Example
 
  * Clone the repository: `git clone git@github.com:JarrodCTaylor/ion-cognito-exemplar.git`
 
- * Update `:app-name` in `resources/datomic/ion-config.edn` with your system name 
+ * Update `:app-name` in `resources/datomic/ion-config.edn` with your system name
 
  * [Push and deploy](https://docs.datomic.com/cloud/ions/ions-reference.html#push).
 
@@ -63,13 +63,13 @@ This script creates the following resources:
 The public and authed routes are both ANY methods and proxy through to the load balancer
 which sits in front of the deployed application. The authed route additionally includes
 the authorizer which expects to find a token in the Authorization header of the request.
-Cognito is called to verify the token. If the token is valid the request is proxied 
+Cognito is called to verify the token. If the token is valid the request is proxied
 through to the load balancer. If not, it is rejected with a 403 response.
 
-In the scripts directory is a file named `log-commands.sh`. Run this script passing the 
+In the scripts directory is a file named `log-commands.sh`. Run this script passing the
 name of the compute stack as an argument. If you followed along with the [Datomic Cloud setup](https://www.youtube.com/watch?v=DsThGK5bZCQ)
 the compute stack should have a name resembling `<YOUR-STACK-NAME>-Compute-<RANDOM-ID>`
-and can be found in the `Stack Name` column of CloudFormation. 
+and can be found in the `Stack Name` column of CloudFormation.
 
 In the scripts directory call the script:
 
@@ -78,7 +78,7 @@ In the scripts directory call the script:
 ```
 
 This script is a convenience to eliminate needing to lookup values in the CloudFormation outputs tab.
-It retrieves the values for `IonApiGatewayEndpoint`, `HttpDirectApiIntegration` and 
+It retrieves the values for `IonApiGatewayEndpoint`, `HttpDirectApiIntegration` and
 `HttpDirectApiGateway` then outputs two things:
 * A curl command to call the /ping endpoint to ensure a functioning deployment
 * A terraform apply command with the needed variables
