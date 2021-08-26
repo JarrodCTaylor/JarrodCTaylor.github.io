@@ -5,7 +5,7 @@ rdiscount:
   extensions: [smart]
 title : Jarrod C Taylor
 production_url : http://jarrodctaylor.com
-description: "Clojure, Vim, Shell, Python and all things open source"
+description: "All things that might go beep and boop"
 author :
   name : Jarrod C Taylor
   github : JarrodCTaylor
