@@ -4,7 +4,7 @@
   "repository": "https://github.com/JarrodCTaylor/JarrodCTaylor.github.io",
   "license": "Unlicense",
   "dependencies": {
-    "grunt": "^1.0.4",
+    "grunt": "^1.5.3",
     "grunt-cli": "*",
     "grunt-contrib-less": "*",
     "less": "*"
