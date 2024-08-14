@@ -1,0 +1,209 @@
+
+---
+layout: post
+title: Clojure 1.12 Field Guide
+tags: clojure
+category: posts
+---
+
+# Clojure 1.12 Field Guide
+
+
+Clojure 1.12 recently received release candidate status. The [changelog](https://github.com/clojure/clojure/blob/master/changes.md#changes-to-clojure-in-version-1120) is a carefully written, authoritative source of all new functionality containing links to relevant Jira tickets and patches for each change and it is worth reviewing by any active Clojure developer.
+
+This post serves as a field guide to 1.12's most significant enhancements. It will provide practical examples to speed up the adoption of some enticing new functionality.
+
+Include the release in your project using the following coordinates and follow along:
+
+### deps.edn coordinate
+``` edn
+org.clojure/clojure {:mvn/version "1.12.0-rc1"}
+```
+### Leiningen dependency
+``` edn
+[org.clojure/clojure "1.12.0-rc1"]
+```
+
+## Add libraries for interactive use
+
+Have you ever been productively working away in a repl when you needed a dependency not yet specified in the project? Clojure now provides new functions to add libraries interactively without restarting the JVM or losing the state of your work; [add-lib](https://clojure.github.io/clojure/branch-master/clojure.repl-api.html#clojure.repl.deps/add-lib), [add-libs](https://clojure.github.io/clojure/branch-master/clojure.repl-api.html#clojure.repl.deps/add-libs), [sync-deps](https://clojure.github.io/clojure/branch-master/clojure.repl-api.html#clojure.repl.deps/sync-deps)
+
+These new functions are intended only for development-time interactive use at the repl. 
+
+``` clojurE
+;; The new functions are automatically referred in the user namespace. 
+;; This require is only necessary if in another namespace.
+(require '[clojure.repl.deps :refer [add-lib add-libs sync-deps]])
+
+;; Download (if necessary) the latest version of a lib not available on the classpath.
+(add-lib 'org.clojure/data.json)
+
+;; You can provide a second argument to specify a version
+(add-lib 'org.clojure/data.json {:mvn/version "2.4.0"})
+
+;; Like add-lib, but resolves a set of new libraries and versions together.
+(add-libs '{org.clojure/data.json {:mvn/version "2.4.0"}
+            org.clojure/data.xml {:mvn/version "0.2.0-alpha9"}})
+
+;; Calls add-libs with any libs present in deps.edn, but not yet present on the classpath.
+;; This is useful when you have a dependency you know will be added to your project's deps.edn 
+;; which you can modify and then sync to your repl.
+(sync-deps)
+
+;; Can also sync with an alias
+(sync-deps :aliases [:perf])
+
+;; After any of the above. You can use the newly added dependency as normal.
+(require '[clojure.data.json :as json])
+(json/read-str "{\"foo\": \"bar\"}" :key-fn keyword)
+```
+
+## Start and control external processes
+1.12 adds a new namespace [clojure.java.process](https://clojure.github.io/clojure/branch-master/clojure.java.process-api.html#clojure.java.process) that takes advantage of new [Java provided APIs](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Process.html) for process info, process control, and I/O redirection. This new namespace is easier to use than the longstanding clojure.java.shell namespace.
+
+```clojure
+(require '[clojure.java.process :as proc])
+
+;; shell out and inherit env vars from the parent
+(proc/start {:out :inherit, :err :stdout} "ls" "-l")
+
+;; write out and err to files, wait for the process to exit, return exit code
+(-> (proc/start {:out (proc/to-file "out") :err (proc/to-file "err")} "ls" "-l") proc/exit-ref deref)
+
+;; capture output to string
+(-> (proc/start "ls" "-l") proc/stdout slurp)
+
+;; execute shell command with given arguments
+(proc/exec "ls" "-l")
+
+;; read input from file
+(proc/exec {:in (proc/from-file "deps.edn")} "wc" "-l")
+```
+
+## Array class syntax
+
+Clojure supports symbols naming classes as a value (for a class object) and as a type hint but has not provided syntax for array classes other than strings. While functional, the strings have always been challenging to remember. I always have to do a double take on any version of `[[Ljava.lang.String;`.
+
+Now, developers can refer to an array class using a symbol of the form `ComponentClass/#dimensions`. You can express the string representation above more readably as `String/2` to refer to a two-dimensional array of strings.
+
+Component classes can be fully-qualified classes, imported classes, or primitives. You can use array class syntax as both type hints and values.
+
+```clojure
+; No more ^"[Ljava.lang.String;"
+(String/join "." ^String/1 (into-array String ["one" "twelve"]))
+
+; Used as a value
+(when (= (class (make-array String 0)) String/1)
+  (println "Array class used as a value"))
+```
+
+## Qualified methods
+
+Java members inherently exist in a class. For method values, where inference is impossible, we need a way to specify the class of an instance method explicitly.
+
+Qualified methods have value semantics when used in non-invocation positions:
+
+  * `Classname/method` - a function that invokes a static method
+  * `Classname/.method` - a function that invokes an instance method
+  * `Classname/new` - a function that invokes a constructor
+
+Java methods can be overloaded, which can cause reflection. We resolve this by providing type hints. We can now supply `:param-tags` metadata on qualified methods to specify the signature of a single desired method, thereby ‘resolving’ it. Parameters with non-overloaded types can use the placeholder `_` instead of a specific tag.
+
+The `:param-tags` metadata is a vector of zero or more tags (type hints): ` ^[t1 t2 ...]`. Each tag corresponds to a parameter in the desired signature (arity should match the number of tags). When you supply :param-tags metadata on a qualified method, the metadata must allow the compiler to resolve it to a single method at compile time. Type hinting in the traditional way continues to work, but I have quickly acclimated to the new syntax and find it easier to read in most circumstances.
+
+```clojure
+;; = Static Method
+(^[_ CharSequence/1] String/join "." (into-array CharSequence ["1" "12"]))
+
+;; = Instance Method
+(String/.toUpperCase "hello")
+
+;; = Constructor
+(import [java.util Date])
+(Date/new 1705087228473)
+```
+
+## Method values
+
+When using Java methods as higher order functions, wrapping them in anonymous functions has been necessary. For example:
+
+``` clojure
+(map #(.toUpperCase ^String %) ["one" "dot" "eleven"])
+```
+
+The anonymous function wrapper is no longer necessary [qualified methods](link) can now be used as ordinary functions in value contexts.
+
+``` clojure
+(map String/.toUpperCase ["one" "dot" "twelve"])
+```
+
+You can combine qualified methods with `:param-tags` to specify the signature of a desired method.
+
+``` clojure
+; Example 1
+;; param-tags used here to resolve overload
+(map ^[String] BigDecimal/new ["1" "2"])
+
+; Example 2
+(import (java.io File)
+        (java.nio.file Files))
+
+(->> ["deps.edn"]
+     (map ^[String] File/new)
+     (map File/.toPath)
+     (mapcat Files/readAllLines))
+``` 
+
+
+## Functional interfaces
+Java programs define "functions" with Java functional interfaces (marked with the `@FunctionalInterface` annotation), which have a single method.
+
+We can now invoke Java methods, taking functional interfaces by passing functions with matching arity directly without the need to reify.
+
+```clojure
+(import (java.util HashMap)
+        (java.util.function Function))
+
+(def cache (HashMap.))
+(HashMap/.put cache "User1" "1234")
+
+(defn retrieve-user [user-id]
+  (java.util.UUID/randomUUID))
+
+;; 1.11
+; The second argument to computeIfAbsent is a java.util.function.Function
+; which is annotated with @FunctionalInterface. Previously, it was necessary 
+; to reify Function.
+(.computeIfAbsent ^java.util.HashMap cache "User2"
+                  (reify Function
+                    (apply [_ user-id]
+                      (retrieve-user user-id))))
+
+;; 1.12
+; We can now use a clojure function directly!!
+(HashMap/.computeIfAbsent cache "User3" retrieve-user)
+```
+
+# Conclusion
+
+Once you familiarize yourself with the new functionality, you will see how it combines to make working with Java from Clojure much more convenient and readable in many situations.
+
+``` clojure
+(import (java.io File FileFilter))
+
+;; 1.11
+(defn sub-dirs [^File dir]
+  (->>
+    (.listFiles dir (reify FileFilter (accept [_ f] (.isDirectory f))))
+    (map #(.getName ^File %))
+    vec))
+
+;; 1.12
+(defn sub-dirs [dir]
+  (->>
+    (^[FileFilter] File/.listFiles dir File/.isDirectory)
+    (map File/.getName)
+    vec))
+
+(sub-dirs (File/new "."))
+```
