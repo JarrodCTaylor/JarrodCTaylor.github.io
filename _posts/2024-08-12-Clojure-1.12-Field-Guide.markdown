@@ -15,11 +15,11 @@ This post serves as a field guide to 1.12's most significant enhancements. It wi
 Include the release in your project using the following coordinates and follow along:
 
 ### deps.edn coordinate
-``` edn
+``` sh
 org.clojure/clojure {:mvn/version "1.12.0-rc1"}
 ```
 ### Leiningen dependency
-``` edn
+``` sh
 [org.clojure/clojure "1.12.0-rc1"]
 ```
 
@@ -29,7 +29,7 @@ Have you ever been productively working away in a repl when you needed a depende
 
 These new functions are intended only for development-time interactive use at the repl. 
 
-``` clojurE
+``` clojure
 ;; The new functions are automatically referred in the user namespace. 
 ;; This require is only necessary if in another namespace.
 (require '[clojure.repl.deps :refer [add-lib add-libs sync-deps]])
