@@ -843,11 +843,6 @@ ul.listing li span {
   font-weight: bold;
 }
 /* Operator.Word */
-.highlight .w {
-  color: #f8f8f8;
-  text-decoration: underline;
-}
-/* Text.Whitespace */
 .highlight .mf {
   color: #0000cf;
   font-weight: bold;
